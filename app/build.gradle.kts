@@ -115,4 +115,7 @@ dependencies {
     implementation(libs.adapter.rxjava)
     implementation(libs.converter.gson)
     implementation(libs.gson)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockwebserver)
+
 }
