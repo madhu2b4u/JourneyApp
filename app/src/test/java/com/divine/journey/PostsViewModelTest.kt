@@ -55,7 +55,7 @@ class PostsViewModelTest {
 
         // Then
         advanceUntilIdle()
-        assertEquals(Result.success(posts), viewModel.postsState.value)
+        assertEquals(Result.success(posts), viewModel.posts.value)
     }
 
     @Test
@@ -72,9 +72,9 @@ class PostsViewModelTest {
         viewModel.fetchPosts(true)
 
         // Then
-        assertEquals(Result.loading<List<Post>>(), viewModel.postsState.value)
+        assertEquals(Result.loading<List<Post>>(), viewModel.posts.value)
         advanceUntilIdle()
-        assertEquals(Result.success(posts), viewModel.postsState.value)
+        assertEquals(Result.success(posts), viewModel.posts.value)
     }
 
     @Test
@@ -83,11 +83,13 @@ class PostsViewModelTest {
         val errorMessage = "Network error"
         coEvery { postsUseCase.getPosts(false) } returns flowOf(Result.error(errorMessage))
 
+        viewModel = PostsViewModel(postsUseCase)
+
         // When
         viewModel.fetchPosts(false)
 
         // Then
         advanceUntilIdle()
-        assertEquals(Result.error<List<Post>>(errorMessage), viewModel.postsState.value)
+        assertEquals(Result.error<List<Post>>(errorMessage), viewModel.posts.value)
     }
 }

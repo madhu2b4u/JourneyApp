@@ -19,23 +19,45 @@ class PostsViewModel @Inject constructor(
     private val postsUseCase: PostsUseCase
 ) : ViewModel() {
 
-    private val _postsState = MutableStateFlow<Result<List<Post>>>(Result.loading())
-    val postsState: StateFlow<Result<List<Post>>> = _postsState.asStateFlow()
+    private val _posts = MutableStateFlow<Result<List<Post>>>(Result.loading())
+    val posts: StateFlow<Result<List<Post>>> = _posts.asStateFlow()
+
+    private val _filteredPosts = MutableStateFlow<List<Post>>(emptyList())
+    val filteredPosts: StateFlow<List<Post>> = _filteredPosts.asStateFlow()
+
+    var searchQuery = MutableStateFlow("")
 
     init {
         fetchPosts(false)
+        observeSearchQuery()
+    }
+
+    private fun observeSearchQuery() {
+        viewModelScope.launch {
+            searchQuery.collect { query ->
+                val currentPosts = _posts.value.data ?: emptyList()
+                _filteredPosts.value = if (query.isEmpty()) {
+                    currentPosts
+                } else {
+                    currentPosts.filter { post ->
+                        post.title.contains(query, ignoreCase = true)
+                    }
+                }
+            }
+        }
     }
 
     fun fetchPosts(isLoaded: Boolean) {
         viewModelScope.launch {
             try {
                 postsUseCase.getPosts(isLoaded)
-                    .onStart { _postsState.value = Result.loading() }
+                    .onStart { _posts.value = Result.loading() }
                     .collect { result ->
-                        _postsState.value = result
+                        _posts.value = result
+                        _filteredPosts.value = result.data ?: emptyList()
                     }
             } catch (e: Exception) {
-                _postsState.value = Result.error("Failed to fetch posts: ${e.message}")
+                _posts.value = Result.error("Failed to fetch posts: ${e.message}")
             }
         }
     }

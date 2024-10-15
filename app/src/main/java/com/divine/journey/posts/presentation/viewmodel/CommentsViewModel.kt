@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.divine.journey.di.Result
 import com.divine.journey.posts.data.model.Comment
-import com.divine.journey.posts.data.model.Post
 import com.divine.journey.posts.domain.PostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
