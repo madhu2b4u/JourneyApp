@@ -82,8 +82,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.hilt.navigation.compose)
-    testImplementation("app.cash.turbine:turbine:0.11.0")
-
 
     // Mockito for mocking
     testImplementation(libs.mockito.core)
