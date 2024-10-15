@@ -1,7 +1,6 @@
 package com.divine.journey.posts.data.source
 
 import com.divine.journey.di.qualifiers.IO
-import com.divine.journey.posts.data.model.Comment
 import com.divine.journey.posts.data.service.PostService
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -15,19 +14,19 @@ class PostsRemoteDataSourceImpl @Inject constructor(
 ) : PostsRemoteDataSource {
 
     override suspend fun getPosts() = withContext(context) {
-       try {
-           val response = service.getPosts().await()
-           if (response.isSuccessful) {
-               response.body() ?: throw NoDataException("Response body is null")
-           } else {
-               throw HttpException(response)
-           }
-       }catch (e: IOException) {
-           throw IOException("Network error occurred: ${e.message}", e)
-       }
+        try {
+            val response = service.getPosts().await()
+            if (response.isSuccessful) {
+                response.body() ?: throw NoDataException("Response body is null")
+            } else {
+                throw HttpException(response)
+            }
+        } catch (e: IOException) {
+            throw IOException("Network error occurred: ${e.message}", e)
+        }
     }
 
-    override suspend fun getComments(postId: Int)= withContext(context) {
+    override suspend fun getComments(postId: Int) = withContext(context) {
         try {
             val response = service.getComments(postId).await()
             if (response.isSuccessful) {
@@ -35,7 +34,7 @@ class PostsRemoteDataSourceImpl @Inject constructor(
             } else {
                 throw HttpException(response)
             }
-        }catch (e: IOException) {
+        } catch (e: IOException) {
             throw IOException("Network error occurred: ${e.message}", e)
         }
     }

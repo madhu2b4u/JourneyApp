@@ -1,14 +1,13 @@
 package com.divine.journey.di
 
-import com.divine.journey.BuildConfig
+import com.divine.journey.di.qualifiers.IO
+import com.divine.journey.di.qualifiers.MainThread
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
-import com.divine.journey.di.qualifiers.IO
-import com.divine.journey.di.qualifiers.MainThread
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

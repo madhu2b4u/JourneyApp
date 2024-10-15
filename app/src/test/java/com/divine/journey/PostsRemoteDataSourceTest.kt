@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -29,7 +30,7 @@ class PostsRemoteDataSourceTest {
     private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var service: PostService
-    private lateinit var remoteDataSource: PostsRemoteDataSourceImpl
+    private lateinit var postsRepository: PostsRemoteDataSourceImpl
     private val gson = Gson()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,7 +38,7 @@ class PostsRemoteDataSourceTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         service = mockk()
-        remoteDataSource = PostsRemoteDataSourceImpl(service, testDispatcher)
+        postsRepository = PostsRemoteDataSourceImpl(service, testDispatcher)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -59,18 +60,8 @@ class PostsRemoteDataSourceTest {
         return if (isSuccessful) {
             Response.success(body)
         } else {
-            Response.error(400, ResponseBody.create("application/json".toMediaTypeOrNull(), "Error"))
+            Response.error(400, "Error".toResponseBody("application/json".toMediaTypeOrNull()))
         }
-    }
-
-    private fun <T> createErrorResponse(code: Int, message: String = "Error"): Response<T> {
-        val errorBody = ResponseBody.create("application/json".toMediaTypeOrNull(), message)
-        return Response.error(code, errorBody)
-    }
-
-    // Helper function to create a successful Response with no body
-    private fun <T> createEmptySuccessResponse(): Response<T> {
-        return Response.success(null)
     }
 
     // Test Cases
@@ -83,7 +74,7 @@ class PostsRemoteDataSourceTest {
         coEvery { service.getPosts() } returns CompletableDeferred(createResponse(posts))
 
         // Act
-        val result = remoteDataSource.getPosts()
+        val result = postsRepository.getPosts()
 
         // Assert
         assertEquals(posts, result)
@@ -100,7 +91,7 @@ class PostsRemoteDataSourceTest {
 
         // Act & Assert
         val exception = assertThrows<HttpException> {
-            remoteDataSource.getPosts()
+            postsRepository.getPosts()
         }
 
         // Assert error code
@@ -120,7 +111,7 @@ class PostsRemoteDataSourceTest {
 
         // Act & Assert
         val exception = assertThrows<NoDataException> {
-            remoteDataSource.getPosts() // Make the actual call to the remoteDataSource
+            postsRepository.getPosts() // Make the actual call to the remoteDataSource
         }
 
         // Assert the exception message is as expected
@@ -137,7 +128,7 @@ class PostsRemoteDataSourceTest {
 
         // Act & Assert
         val exception = assertThrows<IOException> {
-            remoteDataSource.getPosts()
+            postsRepository.getPosts()
         }
 
         // Assert exception message
@@ -156,7 +147,7 @@ class PostsRemoteDataSourceTest {
         coEvery { service.getComments(postId) } returns CompletableDeferred(createResponse(comments))
 
         // Act
-        val result = remoteDataSource.getComments(postId)
+        val result = postsRepository.getComments(postId)
 
         // Assert
         assertEquals(comments, result)
@@ -173,7 +164,7 @@ class PostsRemoteDataSourceTest {
 
         // Act & Assert
         val exception = assertThrows<NoDataException> {
-            remoteDataSource.getComments(postId)
+            postsRepository.getComments(postId)
         }
         assertEquals("Response body is null", exception.message)
         coVerify(exactly = 1) { service.getComments(postId) }
@@ -191,7 +182,7 @@ class PostsRemoteDataSourceTest {
 
         // Act & Assert
         val exception = assertThrows<HttpException> {
-            remoteDataSource.getComments(postId)
+            postsRepository.getComments(postId)
         }
         // Assert error code
         assertEquals(500, exception.code())
@@ -207,7 +198,7 @@ class PostsRemoteDataSourceTest {
 
         // Act & Assert
         val exception = assertThrows<IOException> {
-            remoteDataSource.getComments(postId)
+            postsRepository.getComments(postId)
         }
 
         // Assert exception message
