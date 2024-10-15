@@ -11,9 +11,9 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 
 // This module is installed in the SingletonComponent, ensuring application-wide singletons.
-@Module(includes = [PostRemoteModule.Binders::class])
+@Module(includes = [PostsRemoteModule.Binders::class])
 @InstallIn(SingletonComponent::class)
-class PostRemoteModule {
+class PostsRemoteModule {
     @Module
     @InstallIn(SingletonComponent::class)
     interface Binders {

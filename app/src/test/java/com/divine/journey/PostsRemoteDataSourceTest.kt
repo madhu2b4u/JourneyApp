@@ -11,7 +11,6 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -85,7 +84,7 @@ class PostsRemoteDataSourceTest {
     fun `getPosts throws HttpException on HTTP error response`() = runTest {
         // Arrange
         val errorResponse = CompletableDeferred(
-            Response.error<List<Post>>(404, ResponseBody.create(null, "Not Found"))
+            Response.error<List<Post>>(404, "Not Found".toResponseBody(null))
         ) // Deferred Error Response
         coEvery { service.getPosts() } returns errorResponse
 
@@ -175,7 +174,7 @@ class PostsRemoteDataSourceTest {
         // Arrange
         val postId = 1
         val errorResponse = CompletableDeferred(
-            Response.error<List<Comment>>(500, ResponseBody.create(null, "Internal Server Error"))
+            Response.error<List<Comment>>(500, "Internal Server Error".toResponseBody(null))
         )
 
         coEvery { service.getComments(postId) } returns errorResponse
