@@ -1,4 +1,4 @@
-# Divine Journey - Posts and Post Details Features (MVVM Clean Architecture)
+# Journey App - Posts and Post Details Features (MVVM Clean Architecture)
 
 This project demonstrates the implementation of the **Posts** and **Post Details** features using the MVVM architecture in Jetpack Compose, with **Dagger-Hilt** for dependency injection.
 
