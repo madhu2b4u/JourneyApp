@@ -59,6 +59,11 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    testImplementation(libs.androidx.core.testing)
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.hilt.android.testing)
     kapt (libs.hilt.android.compiler)
     implementation(libs.androidx.core.ktx)
@@ -76,6 +81,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation (libs.androidx.hilt.navigation.compose)
+    testImplementation("app.cash.turbine:turbine:0.11.0")
+
 
     // Mockito for mocking
     testImplementation(libs.mockito.core)

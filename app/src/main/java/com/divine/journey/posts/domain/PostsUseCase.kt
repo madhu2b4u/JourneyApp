@@ -1,9 +1,9 @@
 package com.divine.journey.posts.domain
 
+import com.divine.journey.di.Result
 import com.divine.journey.posts.data.model.Comment
 import com.divine.journey.posts.data.model.Post
 import kotlinx.coroutines.flow.Flow
-import com.divine.journey.di.Result
 
 interface PostsUseCase {
 
